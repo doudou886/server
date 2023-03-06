@@ -1,7 +1,19 @@
+
+'use strict'
+
+/**
+ * Module dependencies.
+ */
+
+
+/**
+ * Prototype.
+ */
+
 module.exports = {
 
     get body() {
-        return this._body;
+        return this._body
     },
 
     /**
@@ -10,11 +22,11 @@ module.exports = {
      * @param {mixed} data body内容
      */
     set body(data) {
-        this._body = data;
+        this._body = data
     },
 
     get status() {
-        return this.res.statusCode;
+        return this.res.statusCode
     },
 
     /**
@@ -24,9 +36,9 @@ module.exports = {
      */
     set status(statusCode) {
         if (typeof statusCode !== 'number') {
-            throw new Error('statusCode must be a number!');
+            throw new Error('statusCode must be a number!')
         }
-        this.res.statusCode = statusCode;
+        this.res.statusCode = statusCode
     }
 
 };

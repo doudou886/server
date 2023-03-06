@@ -1,23 +1,30 @@
+
+'use strict'
+
+/**
+ * Module dependencies.
+ */
+
 module.exports = {
 
     get query() {
-        return this.request.query;
+        return this.request.query
     },
 
     get body() {
-        return this.response.body;
+        return this.response.body
     },
 
     set body(data) {
-        this.response.body = data;
+        this.response.body = data
     },
 
     get status() {
-        return this.response.status;
+        return this.response.status
     },
 
     set status(statusCode) {
-        this.response.status = statusCode;
+        this.response.status = statusCode
     }
 
 };

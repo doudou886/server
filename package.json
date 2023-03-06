@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "http服务器框架",
+  "main": "application.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doudou886/server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/doudou886/server/issues"
+  },
+  "homepage": "https://github.com/doudou886/server#readme",
+  "dependencies": {
+    "only": "^0.0.2"
+  }
+}

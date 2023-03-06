@@ -1,34 +1,46 @@
-let http = require('http');
-let context = require('./context');
-let request = require('./request');
-let response = require('./response');
 
-class Application {
+'use strict'
+
+/**
+ * Module dependencies.
+ */
+
+const http = require('http')
+const context = require('./context')
+const request = require('./request')
+const response = require('./response')
+const compose = require('./compose')
+const Emitter = require('events')
+
+module.exports = class Application extends Emitter{
 
     /**
      * 构造函数
      */
     constructor() {
-        this.callbackFunc;
-        this.context = context;
-        this.request = request;
-        this.response = response;
+        super()
+        this.middlewares = []
+        this.compose = compose
+        //挂载原型
+        this.context = Object.create(context)
+        this.request = Object.create(request)
+        this.response = Object.create(response)
     }
 
     /**
      * 开启http server并传入callback
      */
     listen(...args) {
-        let server = http.createServer(this.callback());
-        server.listen(...args);
+        let server = http.createServer(this.callback())
+        server.listen(...args)
     }
 
     /**
      * 挂载回调函数
      * @param {Function} fn 回调处理函数
      */
-    use(fn) {
-        this.callbackFunc = fn;
+    use(middleware) {
+        this.middlewares.push(middleware)
     }
 
     /**
@@ -37,10 +49,11 @@ class Application {
      */
     callback() {
         return (req, res) => {
-            let ctx = this.createContext(req, res);
-            let respond = () => this.responseBody(ctx);
-            this.callbackFunc(ctx).then(respond);
-        };
+            let ctx = this.createContext(req, res)
+            let respond = () => this.responseBody(ctx)
+            let fn = this.compose(this.middlewares)
+            return fn(ctx).then(respond)
+        }
     }
 
     /**
@@ -51,12 +64,12 @@ class Application {
      */
     createContext(req, res) {
         // 针对每个请求，都要创建ctx对象
-        let ctx = Object.create(this.context);
-        ctx.request = Object.create(this.request);
-        ctx.response = Object.create(this.response);
-        ctx.req = ctx.request.req = req;
-        ctx.res = ctx.response.res = res;
-        return ctx;
+        let ctx = this.context
+        ctx.request = this.request
+        ctx.response = this.response
+        ctx.req = ctx.request.req = req
+        ctx.res = ctx.response.res = res
+        return ctx
     }
 
     /**
@@ -64,15 +77,13 @@ class Application {
      * @param {Object} ctx ctx实例
      */
     responseBody(ctx) {
-        let content = ctx.body;
+        let content = ctx.body
         if (typeof content === 'string') {
-            ctx.res.end(content);
+            ctx.res.end(content)
         }
         else if (typeof content === 'object') {
-            ctx.res.end(JSON.stringify(content));
+            ctx.res.end(JSON.stringify(content))
         }
     }
 
 }
-
-module.exports = Application;
